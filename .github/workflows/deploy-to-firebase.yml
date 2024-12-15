@@ -42,7 +42,7 @@ jobs:
       # Step 7: Set GOOGLE_APPLICATION_CREDENTIALS environment variable
       - name: Set GOOGLE_APPLICATION_CREDENTIALS
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase.json
 
       # Step 8: Deploy to Firebase Hosting (directly specify the project)
       - name: Deploy to Firebase Hosting
@@ -50,4 +50,4 @@ jobs:
 
       # Step 9: Clean up service account file
       - name: Clean up service account file
-        run: rm $HOME/firebase-service-account.json
+        run: rm $HOME/firebase.json
