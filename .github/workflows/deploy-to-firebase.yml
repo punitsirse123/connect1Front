@@ -45,15 +45,10 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
           echo "GOOGLE_APPLICATION_CREDENTIALS set."
 
-      # Step 8: Authenticate using the service account
-      - name: Authenticate with Firebase using service account
-        run: |
-          firebase login --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
-
       # Step 9: Deploy to Firebase Hosting
       - name: Deploy to Firebase Hosting
         run: |
-          firebase deploy --project amara--voice --only hosting
+          firebase deploy --project amara--voice --only hosting --token $FIREBASE_CI_TOKEN
 
       # Step 10: Clean up service account file
       - name: Clean up service account file
