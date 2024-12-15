@@ -18,29 +18,37 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '23'  # Set your Node.js version here
+          node-version: '16'  # Set your Node.js version here
 
-      # Install dependencies and build the frontend
-      - name: Install dependencies and build
-        run: |
-          npm install
-          npm run build  # Run your build script (make sure it's working locally first)
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build the Next.js app
+      - name: Build Next.js app
+        run: npm run build  # Run your build script (make sure it's working locally first)
 
       # Install Firebase CLI on the runner
-      - name: Set up Firebase CLI
+      - name: Install Firebase CLI
         run: |
           curl -sL https://firebase.tools | bash
           firebase --version  # Check Firebase CLI version
 
       # Create the service account file for authentication
       - name: Create service account file
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}" > $HOME/firebase-service-account.json
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}" > $HOME/firebase-service-account.json
 
-      # Set up authentication with the service account
-      - name: Authenticate using service account
+      # Set environment variable for authentication
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
-          firebase --project amara--voice deploy --only hosting
+
+      # Authenticate with Firebase using the service account
+      - name: Authenticate with Firebase
+        run: |
+          firebase use --add --project amara--voice  # Set the correct Firebase project
+          firebase deploy --only hosting
 
       # Clean up the service account file after deployment
       - name: Clean up
