@@ -1,0 +1,34 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main  # Adjust to your default branch, e.g., `main` or `master`
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '21'  # Set your preferred Node.js version
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build  # Run build script (e.g., for React, Vue, Angular)
+
+      - name: Set up Firebase CLI
+        uses: firebase/actions/setup-node@v2
+        with:
+          node-version: '16'  # Set your Node.js version (if needed)
+
+      - name: Deploy to Firebase Hosting
+        uses: firebase/actions/deploy@v2
+        with:
+          firebase_token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}
