@@ -3,7 +3,7 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to deploy from (e.g., `main` or `master`)
+      - main  # Adjust to the branch you want to deploy from (e.g., `main` or `master`)
 
 jobs:
   build-and-deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '23'  # Set your Node.js version here
+          node-version: '16'  # Set your Node.js version here
 
       - name: Install dependencies and build
         run: |
@@ -28,6 +28,9 @@ jobs:
           curl -sL https://firebase.tools | bash
           firebase --version  # Check Firebase CLI version
 
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}" > $GITHUB_ENV
+          
       - name: Deploy to Firebase Hosting
         run: |
-          firebase deploy --only hosting --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}
+          firebase deploy --only hosting --project amara--voice
