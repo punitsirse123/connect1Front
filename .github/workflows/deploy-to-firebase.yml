@@ -3,53 +3,57 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main  # Adjust to the branch you want to deploy from (e.g., `main` or `master`)
+      - main  # Trigger deployment on push to the main branch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository to the GitHub runner
+      # Step 1: Checkout the repository to the GitHub runner
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set up Node.js for the build process
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '23'  # Set your Node.js version here
+          node-version: '23'  # Set your Node.js version here (adjust to your project's needs)
 
-      # Install dependencies
+      # Step 3: Install dependencies (make sure your app works locally before this step)
       - name: Install dependencies
         run: npm install
 
-      # Build the Next.js app
+      # Step 4: Build the Next.js app (or whatever build command is necessary for your app)
       - name: Build Next.js app
-        run: npm run build  # Run your build script (make sure it's working locally first)
+        run: npm run build  # You can adjust this if you use another framework or build process
 
-      # Install Firebase CLI on the runner
+      # Step 5: Install Firebase CLI
       - name: Install Firebase CLI
         run: |
           curl -sL https://firebase.tools | bash
-          firebase --version  # Check Firebase CLI version
+          firebase --version  # Check Firebase CLI version to ensure it's installed
 
-      # Create the service account file for authentication
+      # Step 6: Set up the Firebase service account key from GitHub secrets
       - name: Create service account file
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}" > $HOME/firebase-service-account.json
 
-      # Set environment variable for authentication
-      - name: Set GOOGLE_APPLICATION_CREDENTIALS
+      # Step 7: Set GOOGLE_APPLICATION_CREDENTIALS environment variable to authenticate
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS environment variable
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
 
-      # Authenticate with Firebase using the service account
-      - name: Authenticate with Firebase
+      # Step 8: Authenticate with Firebase (using service account)
+      - name: Authenticate with Firebase using service account
         run: |
-          firebase use --add --project amara--voice  # Set the correct Firebase project
+          firebase use --add --project amara--voice  # Replace with your Firebase project ID
+
+      # Step 9: Deploy the app to Firebase Hosting
+      - name: Deploy to Firebase Hosting
+        run: |
           firebase deploy --only hosting
 
-      # Clean up the service account file after deployment
-      - name: Clean up
+      # Step 10: Clean up service account file after deployment
+      - name: Clean up service account file
         run: rm $HOME/firebase-service-account.json
