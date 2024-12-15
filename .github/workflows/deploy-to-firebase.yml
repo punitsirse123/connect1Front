@@ -3,7 +3,7 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main  # Adjust to your default branch, e.g., `main` or `master`
+      - main  # Change this to the branch you want to deploy from (e.g., `main` or `master`)
 
 jobs:
   build-and-deploy:
@@ -16,19 +16,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '21'  # Set your preferred Node.js version
+          node-version: '23'  # Set your Node.js version here
 
       - name: Install dependencies and build
         run: |
           npm install
-          npm run build  # Run build script (e.g., for React, Vue, Angular)
+          npm run build  # Run your build script (make sure it's working locally first)
 
       - name: Set up Firebase CLI
-        uses: firebase/actions/setup-node@v2
-        with:
-          node-version: '16'  # Set your Node.js version (if needed)
+        run: |
+          curl -sL https://firebase.tools | bash
+          firebase --version  # Check Firebase CLI version
 
       - name: Deploy to Firebase Hosting
-        uses: firebase/actions/deploy@v2
-        with:
-          firebase_token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}
+        run: |
+          firebase deploy --only hosting --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}
