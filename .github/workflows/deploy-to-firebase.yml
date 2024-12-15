@@ -39,20 +39,15 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AMARA__VOICE }}" > $HOME/firebase-service-account.json
 
-      # Step 7: Set GOOGLE_APPLICATION_CREDENTIALS environment variable to the service account file
+      # Step 7: Set GOOGLE_APPLICATION_CREDENTIALS environment variable
       - name: Set GOOGLE_APPLICATION_CREDENTIALS
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
 
-      # Step 8: Set the Firebase project
-      - name: Set Firebase project
-        run: |
-          firebase use --add --project "amara--voice"  # Your Firebase project ID
-
-      # Step 9: Deploy to Firebase Hosting
+      # Step 8: Deploy to Firebase Hosting (directly specify the project)
       - name: Deploy to Firebase Hosting
-        run: firebase deploy --only hosting
+        run: firebase deploy --project amara--voice --only hosting
 
-      # Step 10: Clean up service account file
+      # Step 9: Clean up service account file
       - name: Clean up service account file
         run: rm $HOME/firebase-service-account.json
